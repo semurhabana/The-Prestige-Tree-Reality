@@ -68,5 +68,6 @@ addLayer("j", {
     },
     effectDescription(x) {
       return "which multiplies points by "+format(x)+"x."
-    }
+    },
+    branches: ["p"]
 })

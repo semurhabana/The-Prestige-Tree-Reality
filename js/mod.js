@@ -13,13 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2",
+	num: "0.2.1",
 	name: "John Cena",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
 	${ChangeLogAmount("v0.1", ["Added first 3 Prestige Upgrades", "Endgame: 10 Prestige Points"])}
   ${ChangeLogAmount("v0.2", ["Added John Layer", "More Prestige Upgrades", "Endgame: 3 Johns"])}
+  ${ChangeLogAmount("v0.2.1", ["Bug Fixes"])}
   `
 function ChangeLogAmount(version="v0.0", data=["Added things.", "Added stuff."]) {
   let data2=""
