@@ -8,17 +8,19 @@ let modInfo = {
 	discordLink: "",
 	initialStartPoints: N(10), // Used for hard resets and new players
 	offlineLimit: 82828282,  // In hours
-  endgame: "10 Prestige Points"
+  endgame: "3 Johns"
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1",
-	name: "Upgrade Mechanic",
+	num: "0.2",
+	name: "John Cena",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	${ChangeLogAmount("v0.1", ["Added first 3 Prestige Upgrades", "Endgame: 10 Prestige Points"])}`
+	${ChangeLogAmount("v0.1", ["Added first 3 Prestige Upgrades", "Endgame: 10 Prestige Points"])}
+  ${ChangeLogAmount("v0.2", ["Added John Layer", "More Prestige Upgrades", "Endgame: 3 Johns"])}
+  `
 function ChangeLogAmount(version="v0.0", data=["Added things.", "Added stuff."]) {
   let data2=""
   for (let i=0; i<data.length;i++) {
@@ -53,11 +55,24 @@ function getPointGen() {
 	let gain = N(1)
   if (hasUpgrade("p", 12)) gain=gain.times(UpgradeEffect("p", 12))
   if (hasUpgrade("p", 13)) gain=gain.times(3)
+  if (player.j.unlocked) gain=gain.times(tmp.j.effect)
+  if (hasUpgrade("p", 21)) gain=gain.pow(1.15)
+  if (hasUpgrade("p", 23)) gain=gain.times(UpgradeEffect("p", 23))
 	return gain
 }
 
 function UpgradeEffect(layer, id){
   return tmp[layer].upgrades[id].effect
+}
+
+function Milestone(name, req, desc, toggles){
+  let data = {
+    requirementDescription: name,
+    effectDescription: desc,
+    done: req,
+  }
+  if (toggles) data.toggles = toggles
+  return data
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
@@ -106,6 +121,23 @@ function U(id, cost=N("e1.79e308"), otherData={}){
       title: "Finally Something Different",
       description: "Multiply Points by 3",
       unlocked(){ return player.p.upgrades.includes(12) },
+    },
+    p21: {
+      title: "Super Multiplier",
+      description: "Exponentiate Points by 1.15",
+      unlocked(){ return player.j.unlocked && player.p.upgrades.includes(11) },
+    },
+    p22: {
+      title: "Super Prestige",
+      description: "Multiply Prestige Points by 1.5",
+      unlocked(){ return player.j.unlocked && player.p.upgrades.includes(12) },
+    },
+    p23: {
+      title: "Eggdog",
+      description: "Multiply Points by Points",
+      unlocked(){ return player.j.unlocked && player.p.upgrades.includes(13) },
+      effect(){ return player.points.plus(1).cbrt() },
+      effectDisplay(){ return "Currently: " + format(this.effect()) + "x" }
     }
   }
   let Upgrade = otherData
